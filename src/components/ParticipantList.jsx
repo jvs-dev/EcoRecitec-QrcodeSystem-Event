@@ -4,6 +4,35 @@ const ParticipantList = ({ participants }) => {
   const [list, setList] = useState(participants);
   const [message, setMessage] = useState("");
 
+  async function handleClick() {
+    console.log(list);
+    try {
+      const emailResponse = await fetch(
+        "https://ecorecitec-api.vercel.app/api/sendEventQrCode",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(list),
+        }
+      );
+      if (emailResponse.ok) {
+        console.log("E-mail de ecossistema enviado com sucesso.");
+      } else {
+        console.error(
+          "Erro ao enviar e-mail de ecossistema:",
+          await emailResponse.text()
+        );
+      }
+    } catch (emailError) {
+      console.error(
+        "Erro de conexão ao enviar e-mail de ecossistema:",
+        emailError
+      );
+    }
+  }
+
   function handleChange(enput) {
     let filteredParticipants = participants.filter(
       (participant) =>
@@ -40,7 +69,13 @@ const ParticipantList = ({ participants }) => {
             onChange={(evt) => handleChange(evt.target.value)}
           />
         </label>
-        <button className="participant__sendQRCode" type="button"><ion-icon name="qr-code-outline"></ion-icon></button>
+        <button
+          className="participant__sendQRCode"
+          type="button"
+          onClick={() => handleClick()}
+        >
+          <ion-icon name="qr-code-outline"></ion-icon>
+        </button>
       </div>
       <table className="participant-list__table">
         <thead className="participant-list__header">
