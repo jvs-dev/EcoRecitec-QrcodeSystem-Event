@@ -18,16 +18,16 @@ const ParticipantList = ({ participants }) => {
         }
       );
       if (emailResponse.ok) {
-        console.log("E-mail de ecossistema enviado com sucesso.");
+        console.log("E-mail com QRCode enviado com sucesso.");
       } else {
         console.error(
-          "Erro ao enviar e-mail de ecossistema:",
+          "Erro ao enviar e-mail com QRCode:",
           await emailResponse.text()
         );
       }
     } catch (emailError) {
       console.error(
-        "Erro de conexão ao enviar e-mail de ecossistema:",
+        "Erro de conexão ao enviar e-mail com QRCode:",
         emailError
       );
     }
