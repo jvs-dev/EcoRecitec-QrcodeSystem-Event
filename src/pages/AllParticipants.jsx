@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import ParticipantList from "../components/ParticipantList";
-import Header from "../components/header";
+import HomeHeader from "../components/HomeHeader";
 
 const firebaseConfig = {
   apiKey: `${import.meta.env.VITE_API_KEY}`,
@@ -47,7 +47,7 @@ const AllParticipants = () => {
 
   return (
     <>
-      <Header />
+      <HomeHeader />
       <div className="participants-page">
         <h2 className="participants-page__title">Lista de Participantes</h2>
         {participants.length > 0 ? (

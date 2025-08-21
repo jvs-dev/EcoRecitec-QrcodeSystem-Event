@@ -2,7 +2,7 @@ import { useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, getDoc, updateDoc, doc } from "firebase/firestore";
 import QRCodeScanner from "../components/QRCodeScanner";
-import Header from "../components/header";
+import HomeHeader from "../components/HomeHeader";
 
 const firebaseConfig = {
   apiKey: `${import.meta.env.VITE_API_KEY}`,
@@ -93,7 +93,7 @@ const EntryValidation = () => {
 
   return (
     <>
-      <Header />
+      <HomeHeader />
       <div className="entry-page">
         <h2 className="entry-page__title">Validação de Entrada</h2>
 
