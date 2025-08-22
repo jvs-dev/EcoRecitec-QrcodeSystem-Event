@@ -3,9 +3,10 @@ import { useState } from "react";
 const ParticipantList = ({ participants }) => {
   const [list, setList] = useState(participants);
   const [message, setMessage] = useState("");
+  const [qrcodeSendingIcon, setQrcodeSendingIcon] = useState("qr-code-outline");
 
   async function handleClick() {
-    console.log(list);
+    setQrcodeSendingIcon("refresh-outline");
     try {
       const emailResponse = await fetch(
         "https://ecorecitec-api.vercel.app/api/sendEventQrCode",
@@ -19,6 +20,10 @@ const ParticipantList = ({ participants }) => {
       );
       if (emailResponse.ok) {
         console.log("E-mail com QRCode enviado com sucesso.");
+        setQrcodeSendingIcon("checkmark-outline");
+        setTimeout(() => {
+          setQrcodeSendingIcon("qr-code-outline");
+        }, 3000);
       } else {
         console.error(
           "Erro ao enviar e-mail com QRCode:",
@@ -26,10 +31,7 @@ const ParticipantList = ({ participants }) => {
         );
       }
     } catch (emailError) {
-      console.error(
-        "Erro de conexão ao enviar e-mail com QRCode:",
-        emailError
-      );
+      console.error("Erro de conexão ao enviar e-mail com QRCode:", emailError);
     }
   }
 
@@ -57,7 +59,7 @@ const ParticipantList = ({ participants }) => {
   }
 
   return (
-    <div className="participant-list">
+    <>
       <div className="common-flexRow common-between maxwidth">
         <label htmlFor="searchInput" className="search-label">
           <ion-icon name="search-outline"></ion-icon>
@@ -70,47 +72,55 @@ const ParticipantList = ({ participants }) => {
           />
         </label>
         <button
-          className="participant__sendQRCode"
+          className={`participant__sendQRCode ${
+            qrcodeSendingIcon == "refresh-outline" ? "loading" : ""
+          }`}
+          style={{
+            background:
+              qrcodeSendingIcon == "checkmark-outline" ? "#14e293" : "",
+          }}
           type="button"
           onClick={() => handleClick()}
         >
-          <ion-icon name="qr-code-outline"></ion-icon>
+          <ion-icon name={`${qrcodeSendingIcon}`}></ion-icon>
         </button>
       </div>
-      <table className="participant-list__table">
-        <thead className="participant-list__header">
-          <tr>
-            <th className="participant-list__header-cell">Nome</th>
-            <th className="participant-list__header-cell">Email</th>
-            <th className="participant-list__header-cell">CPF</th>
-            <th className="participant-list__header-cell">Código</th>
-            <th className="participant-list__header-cell">Status</th>
-          </tr>
-        </thead>
-        <tbody className="participant-list__body">
-          {list.map((participant) => (
-            <tr key={participant.id} className="participant-list__row">
-              <td className="participant-list__cell">
-                <strong>{participant.nome}</strong>
-              </td>
-              <td className="participant-list__cell">{participant.email}</td>
-              <td className="participant-list__cell">{participant.cpf}</td>
-              <td className="participant-list__cell">{participant.id}</td>
-              <td className="participant-list__cell">
-                <span
-                  className={`status-badge status-badge--${
-                    participant.status === "utilizado" ? "entered" : "pending"
-                  }`}
-                >
-                  {participant.status === "utilizado" ? "Entrou" : "Pendente"}
-                </span>
-              </td>
+      <div className="participant-list">
+        <table className="participant-list__table">
+          <thead className="participant-list__header">
+            <tr>
+              <th className="participant-list__header-cell">Nome</th>
+              <th className="participant-list__header-cell">Email</th>
+              <th className="participant-list__header-cell">CPF</th>
+              <th className="participant-list__header-cell">Código</th>
+              <th className="participant-list__header-cell">Status</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      {message && <p className="tableError-message">{message}</p>}
-    </div>
+          </thead>
+          <tbody className="participant-list__body">
+            {list.map((participant) => (
+              <tr key={participant.id} className="participant-list__row">
+                <td className="participant-list__cell">
+                  <strong>{participant.nome}</strong>
+                </td>
+                <td className="participant-list__cell">{participant.email}</td>
+                <td className="participant-list__cell">{participant.cpf}</td>
+                <td className="participant-list__cell">{participant.id}</td>
+                <td className="participant-list__cell">
+                  <span
+                    className={`status-badge status-badge--${
+                      participant.status === "utilizado" ? "entered" : "pending"
+                    }`}
+                  >
+                    {participant.status === "utilizado" ? "Entrou" : "Pendente"}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {message && <p className="tableError-message">{message}</p>}
+      </div>
+    </>
   );
 };
 
