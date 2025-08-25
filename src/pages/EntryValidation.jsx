@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, getDoc, updateDoc, doc } from "firebase/firestore";
-import QRCodeScanner from "../components/QRCodeScanner";
-import HomeHeader from "../components/HomeHeader";
+import QRCodeScanner from "../components/QRCodeScanner/QRCodeScanner";
+import HomeHeader from "../components/Header/HomeHeader";
 
 const firebaseConfig = {
   apiKey: `${import.meta.env.VITE_API_KEY}`,

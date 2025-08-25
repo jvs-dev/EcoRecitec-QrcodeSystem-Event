@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
-import ParticipantList from "../components/ParticipantList";
-import HomeHeader from "../components/HomeHeader";
+import ParticipantList from "../components/ParticipantList/ParticipantList";
+import HomeHeader from "../components/Header/HomeHeader";
+import ParticipantData from "../components/ParticipantData/ParticipantData";
 
 const firebaseConfig = {
   apiKey: `${import.meta.env.VITE_API_KEY}`,
@@ -20,6 +21,7 @@ const AllParticipants = () => {
   const [participants, setParticipants] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const fetchParticipants = async () => {
@@ -51,11 +53,17 @@ const AllParticipants = () => {
       <div className="participants-page">
         <h2 className="participants-page__title">Lista de Participantes</h2>
         {participants.length > 0 ? (
-          <ParticipantList participants={participants} />
+          <ParticipantList
+            participants={participants}
+            setUser={setCurrentUser}
+          />
         ) : (
           <p className="no-data">Nenhum participante encontrado.</p>
         )}
       </div>
+      {currentUser && (
+        <ParticipantData user={currentUser} setUser={setCurrentUser} />
+      )}
     </>
   );
 };

@@ -1,6 +1,7 @@
 import { useState } from "react";
+import "./ParticipantList.css";
 
-const ParticipantList = ({ participants }) => {
+const ParticipantList = ({ participants, setUser }) => {
   const [list, setList] = useState(participants);
   const [message, setMessage] = useState("");
   const [qrcodeSendingIcon, setQrcodeSendingIcon] = useState("qr-code-outline");
@@ -98,7 +99,11 @@ const ParticipantList = ({ participants }) => {
           </thead>
           <tbody className="participant-list__body">
             {list.map((participant) => (
-              <tr key={participant.id} className="participant-list__row">
+              <tr
+                key={participant.id}
+                className="participant-list__row"
+                onClick={() => setUser(participant)}
+              >
                 <td className="participant-list__cell">
                   <strong>{participant.nome}</strong>
                 </td>
