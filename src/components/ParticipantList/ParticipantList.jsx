@@ -5,6 +5,7 @@ const ParticipantList = ({ participants, setUser }) => {
   const [list, setList] = useState(participants);
   const [message, setMessage] = useState("");
   const [qrcodeSendingIcon, setQrcodeSendingIcon] = useState("qr-code-outline");
+  const [isFiltring, setIsFiltring] = useState(false);
 
   async function handleClick() {
     setQrcodeSendingIcon("refresh-outline");
@@ -59,6 +60,33 @@ const ParticipantList = ({ participants, setUser }) => {
     setList(filteredParticipants);
   }
 
+  // Novo estado para o filtro
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [filterField, setFilterField] = useState("");
+  const [filterValue, setFilterValue] = useState("");
+
+  const handleFilter = () => {
+    setShowFilterModal(false);
+    if (filterField && filterValue) {
+      const filteredList = participants.filter((participant) =>
+        String(participant[filterField])
+          .toLowerCase()
+          .includes(String(filterValue).toLowerCase())
+      );
+      setList(filteredList);
+      setIsFiltring(true);
+      if (filteredList.length === 0) {
+        setMessage("Nenhum participante encontrado com esse filtro.");
+      } else {
+        setMessage("");
+      }
+    } else {
+      setList(participants);
+      setIsFiltring(false);
+      setMessage("");
+    }
+  };
+
   return (
     <>
       <div className="common-flexRow common-between maxwidth">
@@ -72,19 +100,31 @@ const ParticipantList = ({ participants, setUser }) => {
             onChange={(evt) => handleChange(evt.target.value)}
           />
         </label>
-        <button
-          className={`participant__sendQRCode ${
-            qrcodeSendingIcon == "refresh-outline" ? "loading" : ""
-          }`}
-          style={{
-            background:
-              qrcodeSendingIcon == "checkmark-outline" ? "#14e293" : "",
-          }}
-          type="button"
-          onClick={() => handleClick()}
-        >
-          <ion-icon name={`${qrcodeSendingIcon}`}></ion-icon>
-        </button>
+        <div className="common-flexRow">
+          <button
+            type="button"
+            className="participant__filterBtn"
+            style={{
+              background: isFiltring == true ? "#1bd18b" : "",
+            }}
+            onClick={() => setShowFilterModal(true)}
+          >
+            <ion-icon name="filter-outline"></ion-icon>
+          </button>
+          <button
+            className={`participant__sendQRCode ${
+              qrcodeSendingIcon == "refresh-outline" ? "loading" : ""
+            }`}
+            style={{
+              background:
+                qrcodeSendingIcon == "checkmark-outline" ? "#14e293" : "",
+            }}
+            type="button"
+            onClick={() => handleClick()}
+          >
+            <ion-icon name={`${qrcodeSendingIcon}`}></ion-icon>
+          </button>
+        </div>
       </div>
       <div className="participant-list">
         <table className="participant-list__table">
@@ -125,6 +165,102 @@ const ParticipantList = ({ participants, setUser }) => {
         </table>
         {message && <p className="tableError-message">{message}</p>}
       </div>
+
+      {/* Modal de filtro */}
+      {showFilterModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <span
+              className="close-button"
+              onClick={() => setShowFilterModal(false)}
+            >
+              &times;
+            </span>
+            <h2>Filtrar por Campo</h2>
+            <div className="modal-body">
+              <label>Campo:</label>
+              <input
+                type="text"
+                value={filterField}
+                onChange={(e) => setFilterField(e.target.value)}
+                placeholder="Ex: cidade"
+              />
+              <label>Valor:</label>
+              <input
+                type="text"
+                value={filterValue}
+                onChange={(e) => setFilterValue(e.target.value)}
+                placeholder="Ex: Salvador"
+              />
+            </div>
+            <div className="modal-footer">
+              <button className="modal-button" onClick={handleFilter}>
+                Aplicar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Estilos para o modal, para garantir que ele seja exibido corretamente */}
+      <style>
+        {`
+          .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+          .modal-content {
+            background-color: #fefefe;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+          }
+          .close-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+          }
+          .modal-body label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+          }
+          .modal-body input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+          }
+          .modal-footer {
+            margin-top: 20px;
+            text-align: right;
+          }
+          .modal-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+          }
+        `}
+      </style>
     </>
   );
 };

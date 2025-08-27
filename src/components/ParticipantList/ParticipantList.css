@@ -111,3 +111,19 @@
   transition: background-color 0.2s ease-in-out;
   margin: 0px;
 }
+
+
+.participant__filterBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+  border: none;
+  border-radius: 8px;
+  padding: 6px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  margin: 0px 10px 0px 0px;
+}
