@@ -167,3 +167,26 @@
   color: #718096;
   margin-top: 2rem;
 }
+
+.participantData__bottomDiv {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 20px 0px 0px 0px;
+}
+
+.participantData__bottomDiv .deleteBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-error);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  margin: 0px;
+}

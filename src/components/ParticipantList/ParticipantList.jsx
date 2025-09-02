@@ -1,11 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./ParticipantList.css";
 
 const ParticipantList = ({ participants, setUser }) => {
-  const [list, setList] = useState(participants);
+  const [displayedParticipants, setDisplayedParticipants] =
+    useState(participants);
   const [message, setMessage] = useState("");
   const [qrcodeSendingIcon, setQrcodeSendingIcon] = useState("qr-code-outline");
   const [isFiltring, setIsFiltring] = useState(false);
+  const [searchText, setSearchText] = useState("");
+
+  useEffect(() => {
+    setDisplayedParticipants(participants);
+    let filteredParticipants = participants.filter(
+      (participant) =>
+        participant.nome
+          .toLowerCase()
+          .replace("ã", "a")
+          .includes(searchText.toLowerCase().replace("ã", "a")) ||
+        participant.email.toLowerCase().includes(searchText.toLowerCase()) ||
+        participant.cpf.toLowerCase().includes(searchText.toLowerCase()) ||
+        participant.id.toLowerCase().includes(searchText.toLowerCase())
+    );
+    if (filteredParticipants.length == 0) {
+      setMessage("Nenhum participante encontrado com esse termo de pesquisa.");
+    } else {
+      setMessage("");
+    }
+    if (searchText.replace(" ", "") == "") {
+      setDisplayedParticipants(participants);
+      return;
+    }
+    setDisplayedParticipants(filteredParticipants);
+  }, [participants]);
 
   async function handleClick() {
     setQrcodeSendingIcon("refresh-outline");
@@ -17,7 +43,7 @@ const ParticipantList = ({ participants, setUser }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(list),
+          body: JSON.stringify(displayedParticipants),
         }
       );
       if (emailResponse.ok) {
@@ -38,6 +64,7 @@ const ParticipantList = ({ participants, setUser }) => {
   }
 
   function handleChange(enput) {
+    setSearchText(enput);
     let filteredParticipants = participants.filter(
       (participant) =>
         participant.nome
@@ -54,13 +81,12 @@ const ParticipantList = ({ participants, setUser }) => {
       setMessage("");
     }
     if (enput.replace(" ", "") == "") {
-      setList(participants);
+      setDisplayedParticipants(participants);
       return;
     }
-    setList(filteredParticipants);
+    setDisplayedParticipants(filteredParticipants);
   }
 
-  // Novo estado para o filtro
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [filterField, setFilterField] = useState("");
   const [filterValue, setFilterValue] = useState("");
@@ -73,7 +99,7 @@ const ParticipantList = ({ participants, setUser }) => {
           .toLowerCase()
           .includes(String(filterValue).toLowerCase())
       );
-      setList(filteredList);
+      setDisplayedParticipants(filteredList);
       setIsFiltring(true);
       if (filteredList.length === 0) {
         setMessage("Nenhum participante encontrado com esse filtro.");
@@ -81,7 +107,7 @@ const ParticipantList = ({ participants, setUser }) => {
         setMessage("");
       }
     } else {
-      setList(participants);
+      setDisplayedParticipants(participants);
       setIsFiltring(false);
       setMessage("");
     }
@@ -138,7 +164,7 @@ const ParticipantList = ({ participants, setUser }) => {
             </tr>
           </thead>
           <tbody className="participant-list__body">
-            {list.map((participant) => (
+            {displayedParticipants.map((participant) => (
               <tr
                 key={participant.id}
                 className="participant-list__row"
@@ -166,7 +192,6 @@ const ParticipantList = ({ participants, setUser }) => {
         {message && <p className="tableError-message">{message}</p>}
       </div>
 
-      {/* Modal de filtro */}
       {showFilterModal && (
         <div className="modal">
           <div className="modal-content">
@@ -202,7 +227,6 @@ const ParticipantList = ({ participants, setUser }) => {
         </div>
       )}
 
-      {/* Estilos para o modal, para garantir que ele seja exibido corretamente */}
       <style>
         {`
           .modal {

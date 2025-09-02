@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+  deleteDoc,
+} from "firebase/firestore";
 import ParticipantList from "../components/ParticipantList/ParticipantList";
 import HomeHeader from "../components/Header/HomeHeader";
 import ParticipantData from "../components/ParticipantData/ParticipantData";
@@ -43,6 +49,23 @@ const AllParticipants = () => {
     fetchParticipants();
   }, []);
 
+  async function handleDelete(userToDelete) {
+    if (!userToDelete || !userToDelete.id) {
+      console.error("Tentativa de deletar um usuário inválido.");
+      return;
+    }
+    try {
+      await deleteDoc(doc(db, "inscritos", userToDelete.id));
+      setParticipants((currentParticipants) =>
+        currentParticipants.filter((p) => p.id !== userToDelete.id)
+      );
+      setCurrentUser(null);
+    } catch (error) {
+      console.error("Erro ao deletar participante:", error);
+      setError("Não foi possível remover o participante.");
+    }
+  }
+
   if (isLoading)
     return <p className="loading">Carregando lista de participantes...</p>;
   if (error) return <p className="error-message">{error}</p>;
@@ -62,7 +85,11 @@ const AllParticipants = () => {
         )}
       </div>
       {currentUser && (
-        <ParticipantData user={currentUser} setUser={setCurrentUser} />
+        <ParticipantData
+          user={currentUser}
+          setUser={setCurrentUser}
+          onDelete={handleDelete}
+        />
       )}
     </>
   );

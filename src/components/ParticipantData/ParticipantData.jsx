@@ -1,15 +1,12 @@
 import React from "react";
 import "./ParticipantData.css";
 
-const ParticipantData = ({ user, setUser }) => {
+const ParticipantData = ({ user, setUser, onDelete }) => {
   if (!user) {
     return null;
   }
 
-  // Use Object.entries() para obter um array de pares [chave, valor]
   const userEntries = Object.entries(user);
-
-  // Lista de chaves a serem excluídas da exibição
   const excludedKeys = ["id", "status"];
 
   return (
@@ -20,7 +17,6 @@ const ParticipantData = ({ user, setUser }) => {
           className="participantData__closeParticipantData"
           onClick={() => setUser(null)}
         >
-          {/* Oculta a lista ao clicar no botão */}
           <ion-icon name="close-circle-outline"></ion-icon>
         </button>
         <h2 className="participantData__nameTitle">{user.nome}</h2>
@@ -32,12 +28,10 @@ const ParticipantData = ({ user, setUser }) => {
           {user.status === "utilizado" ? "Entrou" : "Pendente"}
         </span>
 
-        {/* --- Lista de Informações --- */}
         <div className="participantData__details">
           <h3>Informações do Participante:</h3>
           <ul className="participantData__list">
             {userEntries
-              // Filtra as chaves que não devem ser exibidas
               .filter(([key]) => !excludedKeys.includes(key))
               .map(([key, value]) => (
                 <li key={key} className="participantData__listItem">
@@ -46,6 +40,15 @@ const ParticipantData = ({ user, setUser }) => {
                 </li>
               ))}
           </ul>
+          <div className="participantData__bottomDiv">
+            <button
+              type="button"
+              className="deleteBtn"              
+              onClick={() => onDelete(user)}
+            >
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
+          </div>
         </div>
       </div>
     </div>
