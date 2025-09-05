@@ -156,6 +156,7 @@ const ParticipantList = ({ participants, setUser }) => {
         <table className="participant-list__table">
           <thead className="participant-list__header">
             <tr>
+              <th className="participant-list__header-cell">N°</th>
               <th className="participant-list__header-cell">Nome</th>
               <th className="participant-list__header-cell">Email</th>
               <th className="participant-list__header-cell">CPF</th>
@@ -164,15 +165,16 @@ const ParticipantList = ({ participants, setUser }) => {
             </tr>
           </thead>
           <tbody className="participant-list__body">
-            {displayedParticipants.map((participant) => (
+            {displayedParticipants.map((participant, index) => (
               <tr
                 key={participant.id}
                 className="participant-list__row"
                 onClick={() => setUser(participant)}
               >
+                <td className="participant-list__cell">{index + 1}</td>
                 <td className="participant-list__cell">
                   <strong>{participant.nome}</strong>
-                </td>
+                </td>                
                 <td className="participant-list__cell">{participant.email}</td>
                 <td className="participant-list__cell">{participant.cpf}</td>
                 <td className="participant-list__cell">{participant.id}</td>
