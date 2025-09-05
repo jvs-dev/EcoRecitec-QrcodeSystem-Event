@@ -174,6 +174,7 @@
   align-items: center;
   justify-content: flex-end;
   margin: 20px 0px 0px 0px;
+  gap: 20px;
 }
 
 .participantData__bottomDiv .deleteBtn {
@@ -189,4 +190,26 @@
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
   margin: 0px;
+}
+
+.updateBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(220, 53, 69, 0.1);
+  color: var(--color-error);
+  border: solid 2px var(--color-error);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  margin: 0px;
+}
+
+.updateBtn.enter {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: var(--color-success);
+  border: solid 2px var(--color-success);
 }

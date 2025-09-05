@@ -1,7 +1,7 @@
 import React from "react";
 import "./ParticipantData.css";
 
-const ParticipantData = ({ user, setUser, onDelete }) => {
+const ParticipantData = ({ user, setUser, onDelete, onUpdateStatus }) => {
   if (!user) {
     return null;
   }
@@ -19,14 +19,7 @@ const ParticipantData = ({ user, setUser, onDelete }) => {
         >
           <ion-icon name="close-circle-outline"></ion-icon>
         </button>
-        <h2 className="participantData__nameTitle">{user.nome}</h2>
-        <span
-          className={`status-badge status-badge--${
-            user.status === "utilizado" ? "entered" : "pending"
-          }`}
-        >
-          {user.status === "utilizado" ? "Entrou" : "Pendente"}
-        </span>
+        <h2 className="participantData__nameTitle">{user.nome}</h2>        
 
         <div className="participantData__details">
           <h3>Informações do Participante:</h3>
@@ -41,9 +34,22 @@ const ParticipantData = ({ user, setUser, onDelete }) => {
               ))}
           </ul>
           <div className="participantData__bottomDiv">
+            {
+              <button
+                type="button"
+                className={`updateBtn ${
+                  user.status !== "utilizado" ? "" : "enter"
+                }`}
+                onClick={() => onUpdateStatus(user)}
+                title="Confirmar Entrada"
+              >
+                {user.status !== "utilizado" ? "Pendente" : "Entrou"}
+              </button>
+            }
+
             <button
               type="button"
-              className="deleteBtn"              
+              className="deleteBtn"
               onClick={() => onDelete(user)}
             >
               <ion-icon name="trash-outline"></ion-icon>

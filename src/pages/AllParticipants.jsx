@@ -6,6 +6,7 @@ import {
   getDocs,
   doc,
   deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
 import ParticipantList from "../components/ParticipantList/ParticipantList";
 import HomeHeader from "../components/Header/HomeHeader";
@@ -66,6 +67,53 @@ const AllParticipants = () => {
     }
   }
 
+  async function handleUpdateStatus(userToUpdate) {
+    if (!userToUpdate || !userToUpdate.id) {
+      console.error("Tentativa de atualizar um usuário inválido.");
+      return;
+    }
+    try {
+      if (userToUpdate.status !== "utilizado") {
+        const participantDocRef = doc(db, "inscritos", userToUpdate.id);
+        await updateDoc(participantDocRef, {
+          status: "utilizado",
+        });
+
+        setParticipants((currentParticipants) =>
+          currentParticipants.map((p) =>
+            p.id === userToUpdate.id ? { ...p, status: "utilizado" } : p
+          )
+        );
+
+        setCurrentUser((currentUser) =>
+          currentUser && currentUser.id === userToUpdate.id
+            ? { ...currentUser, status: "utilizado" }
+            : currentUser
+        );
+      } else {
+        const participantDocRef = doc(db, "inscritos", userToUpdate.id);
+        await updateDoc(participantDocRef, {
+          status: "pendente",
+        });
+
+        setParticipants((currentParticipants) =>
+          currentParticipants.map((p) =>
+            p.id === userToUpdate.id ? { ...p, status: "pendente" } : p
+          )
+        );
+
+        setCurrentUser((currentUser) =>
+          currentUser && currentUser.id === userToUpdate.id
+            ? { ...currentUser, status: "pendente" }
+            : currentUser
+        );
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar status do participante:", error);
+      setError("Não foi possível atualizar o status do participante.");
+    }
+  }
+
   if (isLoading)
     return <p className="loading">Carregando lista de participantes...</p>;
   if (error) return <p className="error-message">{error}</p>;
@@ -89,6 +137,7 @@ const AllParticipants = () => {
           user={currentUser}
           setUser={setCurrentUser}
           onDelete={handleDelete}
+          onUpdateStatus={handleUpdateStatus}
         />
       )}
     </>
