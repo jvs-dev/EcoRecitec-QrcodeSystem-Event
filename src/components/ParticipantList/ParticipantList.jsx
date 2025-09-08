@@ -5,7 +5,7 @@ const ParticipantList = ({ participants, setUser }) => {
   const [displayedParticipants, setDisplayedParticipants] =
     useState(participants);
   const [message, setMessage] = useState("");
-  const [qrcodeSendingIcon, setQrcodeSendingIcon] = useState("qr-code-outline");
+  const [qrcodeSendingIcon, setQrcodeSendingIcon] = useState("mail-outline");
   const [isFiltring, setIsFiltring] = useState(false);
   const [searchText, setSearchText] = useState("");
 
@@ -37,7 +37,7 @@ const ParticipantList = ({ participants, setUser }) => {
     setQrcodeSendingIcon("refresh-outline");
     try {
       const emailResponse = await fetch(
-        "https://ecorecitec-api.vercel.app/api/sendEventQrCode",
+        "https://ecorecitec-api.vercel.app/api/sendEventEmail",
         {
           method: "POST",
           headers: {
@@ -50,7 +50,7 @@ const ParticipantList = ({ participants, setUser }) => {
         console.log("E-mail com QRCode enviado com sucesso.");
         setQrcodeSendingIcon("checkmark-outline");
         setTimeout(() => {
-          setQrcodeSendingIcon("qr-code-outline");
+          setQrcodeSendingIcon("mail-outline");
         }, 3000);
       } else {
         console.error(
