@@ -108,7 +108,7 @@ function LoginValidation({ onSuccess }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password == `Congresso2025`) {
+    if (password == `##mindset##`) {
       onSuccess();
     } else {
       setError("Senha incorreta");
